@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_S
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
-include(KDECompilerSettings NO_POLICY_SCOPE)
+include(KDECompilerSettings)
 include(FeatureSummary)
 
 # Find Qt modules
@@ -23,12 +23,16 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
         CoreAddons      # KAboutData
         I18n            # KLocalizedString
+        XmlGui          # KXmlGuiWindow
         WidgetsAddons   # KMessageBox
+        TextWidgets
+        ConfigWidgets
+        KIO
         )
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-set(kydl_SRCS main.cpp)
+set(kydl_SRCS main.cpp main.h kydl.cpp kydl.h)
 
 add_executable(kydl ${kydl_SRCS})
 
@@ -36,7 +40,11 @@ target_link_libraries(kydl
         Qt5::Widgets
         KF5::CoreAddons
         KF5::I18n
+        KF5::XmlGui
         KF5::WidgetsAddons
+        KF5::TextWidgets
+        KF5::ConfigWidgets
+        KF5::KIOCore
         )
 
 install(TARGETS kydl  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

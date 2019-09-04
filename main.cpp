@@ -3,37 +3,40 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include "main.h"
 
-int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
+KydlApp::KydlApp(int& argc, char **argv) : QApplication(argc, argv) {
     KLocalizedString::setApplicationDomain("kydl");
 
     KAboutData aboutData(
             QStringLiteral("kydl"),
             i18n("Kydl"),
             QStringLiteral("1.0"),
-            i18n("A youtube-dl frontend in Qt"),
+            i18n("A Qt5 based frontend to youtube-dl!"),
             KAboutLicense::GPL,
             i18n("(c) 2019"),
-            i18n("Some text... and I'm cool"),
-            QStringLiteral("https://espi.dev/"),
-            QStringLiteral("submit@bugs.kde.org"));
-    aboutData.addAuthor(i18n("Name"), i18n("Task"), QStringLiteral("espidev@gmail.com"),
-                        QStringLiteral("https://espi.dev"), QStringLiteral("OSC Username"));
+            i18n("written with lovee"),
+            QStringLiteral("https://kydl.espi.dev/"),
+            QStringLiteral("espidev@gmail.com"));
+
+    aboutData.addAuthor(i18n("Devin Lin"), i18n("Developer"), QStringLiteral("espidev@gmail.com"), QStringLiteral("https://espi.dev"));
 
     KAboutData::setApplicationData(aboutData);
 
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("hwinfo")));
+
     QCommandLineParser parser;
     aboutData.setupCommandLine(&parser);
-    parser.process(app);
+    parser.process(*this);
     aboutData.processCommandLine(&parser);
 
-    KGuiItem yesButton(i18n("Hello"), QString(),
-                       i18n("This is a tooltip"),
-                       i18n("This is a WhatsThis help text."));
+    display = new Kydl();
+    display->show();
+}
 
-    return
-            KMessageBox::questionYesNo
-                    (0, i18n("Hello World"), i18n("Hello"), yesButton)
-            == KMessageBox::Yes ? EXIT_SUCCESS : EXIT_FAILURE;
+int main(int argc, char *argv[]) {
+
+    KydlApp Kyd(argc, argv);
+
+    return Kyd.exec();
 }
